@@ -1,0 +1,18 @@
+node_modules
+dist
+dev-dist
+coverage
+*.log
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+
+# Android build output (proyek android/ sendiri tetap di-commit)
+android/app/build
+android/build
+android/.gradle
+android/local.properties
+*.keystore
+*.jks
+segiempatku-web.zip
+SegiempatKu.apk
