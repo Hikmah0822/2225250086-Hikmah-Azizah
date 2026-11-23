@@ -7,7 +7,8 @@
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": ["node"],
+    "allowImportingTsExtensions": true
   },
-  "include": ["vite.config.ts", "capacitor.config.ts", "tailwind.config.ts"]
+  "include": ["vite.config.ts", "capacitor.config.ts", "tailwind.config.ts", "netlify/**/*.mts", "netlify/**/*.ts", "server/**/*.ts", "functions/**/*.ts"]
 }

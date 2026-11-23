@@ -14,7 +14,10 @@
     "lint": "eslint .",
     "icons": "python scripts/generate_icons.py",
     "android:sync": "npm run build && npx cap sync android",
-    "android:open": "npx cap open android"
+    "android:open": "npx cap open android",
+    "cf:login": "npx -y wrangler@4 login",
+    "deploy": "npm run build && npx -y wrangler@4 pages deploy --branch main",
+    "netlify:deploy": "npm run build && npx -y netlify-cli@27 deploy --prod"
   },
   "dependencies": {
     "@capacitor-community/text-to-speech": "4.1.1",

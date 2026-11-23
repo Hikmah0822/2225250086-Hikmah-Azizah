@@ -1,0 +1,9 @@
+# Netlify settings. The site is deployed with the Netlify CLI (not drag-and-drop),
+# because drag-and-drop does not deploy the "Tanya Beru" server function.
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"

@@ -154,3 +154,17 @@ body {
     @apply chip bg-white text-slate-700 ring-slate-300 dark:bg-slate-900 dark:text-slate-200 dark:ring-slate-700;
   }
 }
+
+/* Browser forced dark modes (Samsung Internet, Chrome auto-dark) skip pages that declare their colour scheme
+   and handle prefers-color-scheme themselves. The app chooses its theme in Pengaturan (.dark class). */
+:root {
+  color-scheme: light;
+}
+:root.dark {
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not(.dark) {
+    color-scheme: light;
+  }
+}

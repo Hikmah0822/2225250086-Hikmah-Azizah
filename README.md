@@ -26,8 +26,22 @@ Perintah lain:
 
 ```bash
 npm run test       # 230 unit test: geometri, penilaian, konten, literasi, stiker, soal kembar, pembacaan suara, dan instrumen penelitian
-npm run build      # build produksi ke folder dist/ (siap diunggah ke Netlify/Vercel)
+npm run build      # build produksi ke folder dist/ (diunggah ke Cloudflare Pages dengan `npm run deploy`)
 ```
+
+### Hosting gratis di Cloudflare Pages: website + AI "Tanya Beru" dan "Foto Soal"
+
+Website: **https://segiempatku.pages.dev** (pindah dari Netlify pada November 2026 karena kredit gratis Netlify habis).
+Server AI ada di folder `functions/` (Cloudflare Pages Functions: `/api/tanya` dan `/api/foto-soal`); logikanya di `server/`.
+AI memakai **Workers AI** lewat *binding* `AI` di `wrangler.toml`, jadi **tidak ada token yang disimpan di mana pun**.
+Jatah gratis 10.000 Neuron per hari (± 500 pertanyaan chat; satu foto memakai lebih banyak). Jika habis, Tanya Beru otomatis memakai mode terpandu sampai besok.
+
+```bash
+npm run cf:login   # sekali saja: login Cloudflare lewat browser
+npm run deploy     # setiap ada perubahan: build + unggah web dan server AI
+```
+
+Cadangan lama (tidak dipakai lagi oleh aplikasi): folder `netlify/` dan `npm run netlify:deploy`, dengan variabel `CF_ACCOUNT_ID` + `CF_API_TOKEN` atau `DEEPSEEK_API_KEY` (berbayar) di Netlify.
 
 ### Membuat APK Android
 
@@ -54,6 +68,7 @@ npm run build      # build produksi ke folder dist/ (siap diunggah ke Netlify/Ve
 | Latihan Ulang Pintar | Paket latihan dari kesalahan siswa sendiri; **soal kembar** (angka baru) muncul otomatis setelah siswa butuh pembahasan |
 | 🔊 Bacakan | Membacakan soal, cerita literasi, dan kartu materi (suara bawaan HP/browser, simbol matematika dibaca dengan benar) |
 | Pilah informasi | Pada soal cerita, siswa memilih informasi yang diperlukan (ada informasi pengecoh) dan menentukan apa yang ditanya sebelum menjawab |
+| Model RMT | Label 🧠 fungsi berpikir di soal dan Lab, kartu Refleksi setelah latihan, **Jurnal Berpikirku** dan Kamus Fungsi Berpikir, serta mediasi Beru sesuai kriteria MLE ([docs/10-model-rmt.md](docs/10-model-rmt.md)) |
 | F08 Catatanku | Ringkasan per bangun + tabel sifat dengan filter |
 | F09 Progres | Disimpan di perangkat, daftar "Perlu diulang" |
 | F10 Pengaturan | Ukuran teks, tema gelap, kurangi animasi |
@@ -75,6 +90,7 @@ Baca sesuai urutan berikut:
 | 7 | [docs/07-roadmap.md](docs/07-roadmap.md) | Tahapan pengerjaan per sprint dan checklist |
 | 8 | [docs/08-rencana-evaluasi.md](docs/08-rencana-evaluasi.md) | Pengujian teknis, validasi ahli, uji kepraktisan, dan pengukuran beban kognitif |
 | 9 | [docs/09-panduan-uji-coba.md](docs/09-panduan-uji-coba.md) | Panduan praktis uji coba: checklist teknis, angket validasi, skenario tugas, lembar observasi, pertanyaan wawancara |
+| 10 | [docs/10-model-rmt.md](docs/10-model-rmt.md) | Model pembelajaran *Rigorous Mathematical Thinking* dan pemetaannya ke fitur aplikasi |
 
 ## Teknologi
 

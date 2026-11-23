@@ -37,6 +37,10 @@ export interface ShapeFigureProps {
   accent?: string;
   className?: string;
   ariaLabel?: string;
+  /** What the shape stands for in a word problem ("Lahan parkir"), written inside it. */
+  areaLabel?: string;
+  /** Equal cells inside the shape (e.g. tiles): lines between opposite sides. */
+  grid?: { cols: number; rows: number };
 }
 
 const VIEWBOX = { x: -8.5, y: -6.5, w: 17, h: 13 };
@@ -59,6 +63,8 @@ export default function ShapeFigure({
   accent,
   className = '',
   ariaLabel,
+  areaLabel,
+  grid,
 }: ShapeFigureProps) {
   const q = quad ?? SHAPE_MODELS[shape].initial;
   const svgRef = useRef<SVGSVGElement>(null);
@@ -185,6 +191,20 @@ export default function ShapeFigure({
         className={interactive ? (drag?.kind === 'move' ? 'cursor-grabbing' : 'cursor-grab') : ''}
         onPointerDown={startMove}
       />
+
+      {/* Grid cells (e.g. floor tiles): lines between points spaced equally on opposite sides */}
+      {grid &&
+        (() => {
+          const lerp = (p: Vec, r: Vec, t: number) => add(p, scale(sub(r, p), t));
+          const cols = Math.min(40, Math.max(1, Math.round(grid.cols)));
+          const rows = Math.min(40, Math.max(1, Math.round(grid.rows)));
+          const lines: [Vec, Vec][] = [];
+          for (let i = 1; i < cols; i++) lines.push([lerp(q[0], q[1], i / cols), lerp(q[3], q[2], i / cols)]);
+          for (let j = 1; j < rows; j++) lines.push([lerp(q[0], q[3], j / rows), lerp(q[1], q[2], j / rows)]);
+          return lines.map(([a, b], k) => (
+            <line key={`g${k}`} x1={a.x} y1={a.y} x2={b.x} y2={b.y} stroke="var(--g-side)" strokeOpacity={0.35} strokeWidth={0.035} pointerEvents="none" />
+          ));
+        })()}
 
       {/* Symmetry axes */}
       {has('symmetry') &&
@@ -361,6 +381,29 @@ export default function ShapeFigure({
             </text>
           );
         })}
+
+      {/* What the shape stands for in the word problem */}
+      {showText && areaLabel && (
+        <text
+          {...(() => {
+            const c = scale(add(add(q[0], q[1]), add(q[2], q[3])), 0.25);
+            if (!showHeight) return { x: c.x, y: c.y };
+            // The height label sits left of centre: move towards side BC and a little down.
+            const p = add(add(c, scale(sub(scale(add(q[1], q[2]), 0.5), c), 0.35)), scale(sub(q[0], q[3]), 0.18));
+            return { x: p.x, y: p.y };
+          })()}
+          fontSize={FONT * 0.95}
+          textAnchor="middle"
+          dominantBaseline="central"
+          fill="var(--g-label)"
+          fontWeight={700}
+          fontStyle="italic"
+          className="figure-text"
+          pointerEvents="none"
+        >
+          {areaLabel}
+        </text>
+      )}
 
       {/* Vertex letters */}
       {showText &&

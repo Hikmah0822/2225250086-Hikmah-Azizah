@@ -12,6 +12,8 @@ import { formatNumber, roundPreservingSum } from '../lib/format';
 import { LAB_SHAPE_NAMES } from '../content/shapes';
 import { LAB_TASKS } from '../content/labTasks';
 import type { LabShapeId, Layer } from '../types';
+import CognitiveTags from '../components/ui/CognitiveTags';
+import { LAB_FUNCTIONS } from '../content/rmt';
 import type { Quad } from '../lib/geometry/vector';
 
 const SHAPE_CHOICES: LabShapeId[] = ['rectangle', 'square', 'parallelogram', 'rhombus', 'kite', 'trapezoid', 'trapezoid-isosceles', 'trapezoid-right', 'free'];
@@ -44,6 +46,7 @@ function LabTaskPanel({ shape }: { shape: LabShapeId }) {
   return (
     <section className="card space-y-3" aria-label="Tugas eksplorasi">
       <p className="font-bold">💡 Tugas: {task.instruction}</p>
+      <CognitiveTags ids={LAB_FUNCTIONS} />
       <p>{task.question} <span className="text-sm text-slate-500">(boleh pilih lebih dari satu)</span></p>
       <div className="space-y-2">
         {task.options.map((o) => (
@@ -91,7 +94,9 @@ export default function LabPage() {
   const [layers, setLayers] = useState<Layer[]>(initialLayers);
   const [selectedAngle, setSelectedAngle] = useState<number | null>(null);
   const markLabVisited = useProgress((s) => s.markLabVisited);
-  useEffect(() => markLabVisited(shape), [shape, markLabVisited]);
+  useEffect(() => {
+    markLabVisited(shape);
+  }, [shape, markLabVisited]);
 
   const quad = quads[shape] ?? SHAPE_MODELS[shape].initial;
   const setQuad = (q: Quad) => setQuads((s) => ({ ...s, [shape]: q }));

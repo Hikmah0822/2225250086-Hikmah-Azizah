@@ -1,0 +1,10 @@
+# Cloudflare Pages: static app from dist/ + API routes in functions/ (/api/tanya, /api/foto-soal).
+# Deploy: npm run deploy  (first time: npm run cf:login)
+name = "segiempatku"
+pages_build_output_dir = "dist"
+compatibility_date = "2024-09-23"
+
+# Workers AI for "Tanya Beru" and "Foto Soal": uses the account's free daily allocation,
+# so no API token is stored anywhere.
+[ai]
+binding = "AI"

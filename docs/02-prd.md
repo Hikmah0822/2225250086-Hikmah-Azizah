@@ -227,6 +227,31 @@ Aktivitas penalaran terbalik. Siswa diberi ciri-ciri (mis. "diagonal saling tega
 
 > **Catatan untuk instrumen:** di Pedoman Umum Penskoran, contoh "soal nomor 3" menyebut *luas kebun 120 m², lahan sayuran 72 m², bibit*, padahal soal nomor 3 adalah **Kolam Ikan**. Contohnya perlu disesuaikan.
 
+### F15 — Model Rigorous Mathematical Thinking `S` *(ditambahkan; sudah diimplementasikan)*
+
+- Label 🧠 fungsi berpikir (15 fungsi kognitif, tiga tingkat, Tabel 4.1 Kinard & Kozulin) di setiap soal dan di Lab. Label bisa diketuk untuk melihat arti dan contohnya.
+- Kartu **Refleksi** setelah latihan: memilih fungsi berpikir yang dipakai (maks. 5 pilihan), menilai tingkat paham (1–4), menulis apa yang dipelajari dan buktinya, serta yang masih membingungkan.
+- **Jurnal Berpikirku** (`/jurnal`): riwayat refleksi dan Kamus Fungsi Berpikir. Hanya disimpan di perangkat.
+- Tanya Beru memediasi sesuai kriteria MLE dan meminta bukti logis.
+- Rincian pemetaan: [10-model-rmt.md](10-model-rmt.md).
+
+### F14 — Asisten Belajar Beru `S` *(ditambahkan; diperbarui sesuai masukan dosen, November 2026)*
+
+- **Pembimbing proses berpikir**: 5 tombol kesulitan yang dipetakan ke 5 tahap RMT, tangga bantuan 4 tingkat, dan aturan beban kognitif (IL/EL/GL). Rincian: [10-model-rmt.md §5](10-model-rmt.md).
+- **Mode terpandu** (gratis, tanpa internet) selalu tersedia. **Mode AI** (DeepSeek) aktif jika key dipasang.
+- **Tombol melayang "Tanya Beru"** di Beranda, halaman bangun, Catatanku, Bandingkan, Jurnal, dan Progres. Tombol ini tidak muncul di latihan, literasi, dan tes penelitian. Beru menyapa dengan nama siswa (nama hanya dipakai di perangkat). Tersedia tombol pertanyaan cepat dan kolom ketik. Pertanyaan konsep (apa itu, sifat, rumus, beda dua bangun, keliling vs luas) dijawab **gratis tanpa internet** dari data materi (`src/lib/conceptAnswer.ts`). Hanya pertanyaan lain yang dikirim ke AI. Setiap jawaban diakhiri pertanyaan pemantik (mediasi RMT).
+
+- **Foto Soal** (`/foto-soal`, kartu di Beranda; ditambahkan atas permintaan pemilik proyek, November 2026). Siswa memotret satu soal segiempat (kamera atau galeri). AI membaca soal lalu menampilkan: soal yang terbaca (untuk dicek siswa) beserta **gambar bangunnya** (digambar `ShapeFigure` dengan ukuran ditulis langsung pada sisi; AI hanya memilih jenis bangun dan label), gambar kecil di setiap langkah yang **menyorot bagian yang sedang dibahas** (alas, tinggi, diagonal, keliling, atau luas), **Diketahui → Ditanya**, **langkah yang dibuka satu per satu** dengan label tahap RMT, lalu **jawaban akhir hanya setelah semua langkah dibuka** (aturan 11), cek kewajaran, peringatan "AI bisa keliru", dan kartu Refleksi. Soal di luar segiempat ditolak dengan sopan. Butuh internet dan mengikuti saklar Tanya Beru di Pengaturan. Foto dikecilkan di perangkat (≤ 1280 px), dikirim sekali ke `POST /api/foto-soal` (Netlify Function → Cloudflare Workers AI, model `gemma-4-26b-a4b-it` yang bisa membaca gambar), dan tidak disimpan. Logika: `src/lib/photoSolve.ts`.
+
+Rincian awal:
+
+- Panel chat di setiap soal latihan dan tahap literasi. Beru **membimbing dengan pertanyaan** (mediasi, sejalan dengan RMT) dan tidak memberi jawaban akhir sebelum siswa mencoba 2 kali atau membuka pembahasan.
+- Kunci jawaban dan langkah resmi soal dikirim sebagai **acuan kebenaran**, agar AI tidak mengarang.
+- Batas 5 pertanyaan per soal; jawaban ≤ 60 kata; bisa didengar (🔊).
+- Arsitektur: aplikasi → `POST /api/tanya` (Netlify Function, menyimpan `DEEPSEEK_API_KEY`) → DeepSeek. Ada daftar origin yang diizinkan dan pembatas laju sederhana.
+- Privasi: nama/kelas tidak dikirim; bisa dimatikan di Pengaturan; butuh internet (fitur lain tetap offline).
+- ⏳ Penyesuaian prompt dengan **ringkasan RMT** dari pemilik proyek (lihat `RMT_GUIDANCE` di `src/lib/tutorPrompt.ts`).
+
 ### F13 — Koleksi Stiker `C` *(ditambahkan; sudah diimplementasikan)*
 
 12 stiker yang menghargai perilaku belajar (menyelesaikan Persiapan, skor ≥ 80 di latihan tiap bangun, membuka Lab untuk 5 bangun, memecahkan 3 kasus Detektif, skor literasi ≥ 20/24). Pop-up muncul saat stiker baru didapat. Data: `src/content/badges.ts`.

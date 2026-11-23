@@ -14,6 +14,8 @@ import { makeTwin } from '../lib/quiz/twins';
 import { buildReviewSet } from '../lib/quiz/review';
 import { useProgress } from '../store/progressStore';
 import Mascot from '../components/ui/Mascot';
+import ReflectionCard from '../components/quiz/ReflectionCard';
+import { reflectionChoices } from '../content/rmt';
 import { firstName, useProfile } from '../store/profileStore';
 import type { Level, MisconceptionId, Question, ShapeId } from '../types';
 
@@ -105,6 +107,13 @@ function PracticePage({ id }: { id: string }) {
           <p className="text-slate-600 dark:text-slate-300">
             {pct >= 80 ? `Hebat, ${first}! Kamu sudah menguasai bagian ini.` : pct >= 50 ? `Bagus, ${first}! Ulangi bagian yang masih keliru.` : `Tidak apa-apa, ${first}. Coba buka lagi Materi dan Lab, lalu ulangi latihannya.`}
           </p>
+        </div>
+        <div className="mt-4">
+          <ReflectionCard
+            activity={title}
+            score={pct}
+            suggested={reflectionChoices(questions.slice(0, index + 1).map((x) => x.concept))}
+          />
         </div>
         {unique.length > 0 && (
           <div className="card mt-4">

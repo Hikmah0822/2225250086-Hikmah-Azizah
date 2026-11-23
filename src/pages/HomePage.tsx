@@ -119,6 +119,8 @@ export default function HomePage() {
           { to: '/bandingkan', icon: '🔍', bg: 'bg-sky-100 dark:bg-sky-950', title: 'Bandingkan', desc: 'Belah ketupat vs layang-layang, dan lainnya' },
           { to: '/detektif', icon: '🕵️', bg: 'bg-violet-100 dark:bg-violet-950', title: 'Detektif', desc: 'Tebak bangun dari diagonalnya' },
           { to: '/latihan/campuran', icon: '🎯', bg: 'bg-emerald-100 dark:bg-emerald-950', title: 'Latihan Campuran', desc: 'Soal gabungan semua bangun' },
+          { to: '/foto-soal', icon: '📸', bg: 'bg-sky-100 dark:bg-sky-950', title: 'Foto Soal', desc: 'Foto soal segiempat, Beru uraikan langkahnya' },
+          { to: '/jurnal', icon: '📓', bg: 'bg-violet-100 dark:bg-violet-950', title: 'Jurnal Berpikirku', desc: 'Refleksi dan kamus fungsi berpikir' },
           { to: '/stiker', icon: '🏅', bg: 'bg-amber-100 dark:bg-amber-950', title: 'Koleksi Stiker', desc: 'Kumpulkan stiker Beru, Kelin, dan Kimi' },
         ].map((c, i) => (
           <Link key={c.to} to={c.to} className="card-link flex animate-fade-up items-center gap-3" style={stagger(9 + i)}>

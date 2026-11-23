@@ -80,6 +80,7 @@ function LiteracyTaskPage({ id }: { id: string | undefined }) {
           key={`${attempt}-${stageIndex}`}
           stage={task.stages[stageIndex]}
           totalStages={task.stages.length}
+          problem={`${task.story}\n${task.question}`}
           onDone={onStageDone}
           onMistake={(m) => recordAttempt({ questionId: `${task.id}-T${task.stages[stageIndex].tahap}`, correct: false, misconception: m })}
         />

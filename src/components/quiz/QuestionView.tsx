@@ -14,6 +14,22 @@ import Mascot from '../ui/Mascot';
 import { QUESTIONS } from '../../content/questions';
 import SpeakButton from '../ui/SpeakButton';
 import InfoSorter from './InfoSorter';
+import TutorChat from './TutorChat';
+import CognitiveTags from '../ui/CognitiveTags';
+import { CONCEPT_FUNCTIONS, cognitiveNames } from '../../content/rmt';
+import { SHAPES } from '../../content/shapes';
+import type { Concept } from '../../types';
+
+const CONCEPT_NAMES: Record<Concept, string> = {
+  sides: 'sisi',
+  angles: 'sudut',
+  diagonals: 'diagonal',
+  symmetry: 'simetri',
+  perimeter: 'keliling',
+  area: 'luas',
+  classify: 'jenis bangun',
+  'word-problem': 'soal cerita',
+};
 
 export interface QuestionOutcome {
   /** 1 = right first time, 0.5 = right after retry, 0 = not solved, null = worked example (not scored). */
@@ -104,6 +120,9 @@ export default function QuestionView({ question: q, onNext, onAttempt }: Props) 
         {q.level === 'completion' && <span className="rounded-full bg-sky-100 px-2.5 py-1 text-sky-800 dark:bg-sky-900 dark:text-sky-100">Lengkapi</span>}
         {q.level === 'independent' && <span className="rounded-full bg-amber-100 px-2.5 py-1 text-amber-800 dark:bg-amber-900 dark:text-amber-100">Mandiri</span>}
       </div>
+
+      {/* RMT: name the thinking actions this problem trains. */}
+      <CognitiveTags ids={CONCEPT_FUNCTIONS[q.concept]} label="Fungsi berpikir soal ini" />
 
       <div className="flex items-start gap-2">
         <p className="flex-1 text-lg font-semibold leading-snug">{q.stem}</p>
@@ -296,6 +315,26 @@ export default function QuestionView({ question: q, onNext, onAttempt }: Props) 
               </button>
             )}
           </div>
+
+          {/* AI tutor: grounded in the official key and steps of this question. */}
+          <TutorChat
+            context={{
+              topic: `${q.shape === 'mixed' ? 'Segiempat campuran' : SHAPES[q.shape].name} — ${CONCEPT_NAMES[q.concept]}`,
+              question: [q.stem, q.story ? `Diketahui: ${q.story.known.join('; ')}. Ditanya: ${q.story.asked}.` : ''].filter(Boolean).join('\n'),
+              studentAnswer:
+                q.type === 'numeric'
+                  ? input && `${input}${q.unit ? ` ${q.unit}` : ''}`
+                  : q.options.filter((o) => (q.type === 'multi-select' ? multi.includes(o.id) : o.id === choice)).map((o) => o.text).join('; '),
+              correctAnswer: answerText(q),
+              solutionSteps: q.solutionSteps,
+              hints: q.hints,
+              attempts: wrongCount + (solved ? 1 : 0),
+              solutionShown: finished,
+              thinkingFunctions: cognitiveNames(CONCEPT_FUNCTIONS[q.concept]),
+              known: q.story?.facts ? q.story.facts.filter((f) => f.needed).map((f) => f.text) : q.story?.known,
+              asked: q.story?.asked,
+            }}
+          />
         </>
       )}
     </div>

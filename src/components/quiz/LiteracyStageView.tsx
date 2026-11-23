@@ -9,6 +9,7 @@ import type { GradeResult } from '../../lib/quiz/grade';
 import { fieldCredit, gradeField, stageScore } from '../../lib/quiz/literacy';
 import { formatNumber } from '../../lib/format';
 import Celebrate from '../ui/Celebrate';
+import TutorChat from './TutorChat';
 import Mascot from '../ui/Mascot';
 
 interface FieldState {
@@ -18,6 +19,8 @@ interface FieldState {
 
 interface Props {
   stage: LiteracyStage;
+  /** Full problem text (story + question), for the AI tutor. */
+  problem?: string;
   totalStages: number;
   onDone: (score: number) => void;
   onMistake?: (misconception: MisconceptionId | undefined) => void;
@@ -31,7 +34,7 @@ function correctText(f: StageField): string {
   return `${f.answer >= 1000 ? f.answer.toLocaleString('id-ID') : formatNumber(f.answer, 2)}${f.unit ? ` ${f.unit}` : ''}`;
 }
 
-export default function LiteracyStageView({ stage, totalStages, onDone, onMistake }: Props) {
+export default function LiteracyStageView({ stage, totalStages, onDone, onMistake, problem = '' }: Props) {
   const [values, setValues] = useState<Record<string, string>>({});
   const [states, setStates] = useState<Record<string, FieldState>>({});
   const [round, setRound] = useState<1 | 2>(1);
@@ -190,6 +193,18 @@ export default function LiteracyStageView({ stage, totalStages, onDone, onMistak
           </button>
         </div>
       )}
+      <TutorChat
+        context={{
+          topic: `Literasi matematika — Tahap ${stage.tahap}: ${stage.title}`,
+          question: [problem, `Tahap ${stage.tahap}: ${stage.title}`, ...stage.fields.map((f) => `- ${f.label}`)].join('\n'),
+          studentAnswer: stage.fields.map((f) => `${f.label}: ${values[f.id] ? (f.kind === 'choice' ? f.options.find((o) => o.id === values[f.id])?.text ?? '' : values[f.id]) : '(kosong)'}`).join('; '),
+          correctAnswer: stage.fields.map((f) => `${f.label}: ${correctText(f)}`).join('; '),
+          solutionSteps: stage.explanation,
+          hints: [stage.hint],
+          attempts: round === 2 || finished ? 2 : Object.keys(states).length > 0 ? 1 : 0,
+          solutionShown: finished,
+        }}
+      />
     </section>
   );
 }

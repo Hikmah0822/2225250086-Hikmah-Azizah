@@ -16,3 +16,8 @@ android/local.properties
 *.jks
 segiempatku-web.zip
 SegiempatKu.apk
+
+# Netlify CLI and secrets (the DeepSeek API key must never be committed)
+.netlify
+.env
+.env.*

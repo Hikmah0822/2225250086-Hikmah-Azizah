@@ -6,7 +6,7 @@ import { useProfile } from '../store/profileStore';
 import WelcomePage from './WelcomePage';
 
 export default function SettingsPage() {
-  const { fontScale, theme, reduceMotion, update } = useSettings();
+  const { fontScale, theme, reduceMotion, aiTutor, update } = useSettings();
   const { name, className, clear } = useProfile();
   const [editing, setEditing] = useState(false);
 
@@ -62,6 +62,15 @@ export default function SettingsPage() {
             ))}
           </div>
         </section>
+        <section className="card space-y-1">
+          <label className="flex min-h-[44px] items-center justify-between gap-3">
+            <span className="font-bold">Asisten Belajar Beru: mode AI</span>
+            <input type="checkbox" className="h-6 w-6 accent-brand-600" checked={aiTutor} onChange={(e) => update({ aiTutor: e.target.checked })} />
+          </label>
+          <p className="text-xs text-slate-500 dark:text-slate-400">
+            Jika menyala dan tersedia, Beru memakai AI (butuh internet; soal dan pertanyaanmu dikirim tanpa nama dan kelas). Jika mati, Beru tetap membimbing dalam mode terpandu tanpa internet.
+          </p>
+        </section>
         <section className="card">
           <label className="flex min-h-[44px] items-center justify-between gap-3">
             <span className="font-bold">Kurangi animasi</span>
@@ -71,7 +80,7 @@ export default function SettingsPage() {
         <section className="card space-y-1 text-sm text-slate-600 dark:text-slate-300">
           <h2 className="text-base font-bold text-slate-900 dark:text-slate-100">Tentang</h2>
           <p>SegiempatKu membantu kamu belajar sifat, keliling, dan luas segiempat dengan gambar yang bisa digeser.</p>
-          <p>Nama, kelas, dan progresmu hanya disimpan di perangkat ini dan tidak dikirim ke mana pun.</p>
+          <p>Nama, kelas, dan progresmu hanya disimpan di perangkat ini. Jika kamu memakai Tanya Beru, hanya soal dan pertanyaanmu yang dikirim ke layanan AI, tanpa nama dan kelas.</p>
           <p className="text-xs text-slate-500">Versi 0.1.0</p>
         </section>
       </div>

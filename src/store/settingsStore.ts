@@ -5,6 +5,8 @@ export interface Settings {
   fontScale: 1 | 1.25;
   theme: 'light' | 'dark' | 'system';
   reduceMotion: boolean;
+  /** "Tanya Beru" AI tutor (needs internet). A teacher can switch it off, e.g. during a test. */
+  aiTutor: boolean;
 }
 
 interface SettingsState extends Settings {
@@ -18,6 +20,7 @@ export const useSettings = create<SettingsState>()(
       // Bright theme by default; dark mode stays available in Pengaturan.
       theme: 'light',
       reduceMotion: false,
+      aiTutor: true,
       update: (patch) => set(patch),
     }),
     {

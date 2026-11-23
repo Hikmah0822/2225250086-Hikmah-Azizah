@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage';
 import WelcomePage from './pages/WelcomePage';
 import SceneBackground from './components/ui/SceneBackground';
 import BadgeToast from './components/ui/BadgeToast';
+import BeruAssistant from './components/ui/BeruAssistant';
 import { useProfile } from './store/profileStore';
 
 // Lazy-load everything except the home page to keep the first load small (NFR03/NFR04).
@@ -24,13 +25,20 @@ const StickersPage = lazy(() => import('./pages/StickersPage'));
 const ResearchPage = lazy(() => import('./pages/ResearchPage'));
 const ResearchTestPage = lazy(() => import('./pages/ResearchTestPage'));
 const SurveyPage = lazy(() => import('./pages/SurveyPage'));
+const JournalPage = lazy(() => import('./pages/JournalPage'));
+const PhotoSolvePage = lazy(() => import('./pages/PhotoSolvePage'));
 
 function useApplySettings() {
   const { theme, fontScale, reduceMotion } = useSettings();
   useEffect(() => {
     const root = document.documentElement;
     const media = window.matchMedia('(prefers-color-scheme: dark)');
-    const apply = () => root.classList.toggle('dark', theme === 'dark' || (theme === 'system' && media.matches));
+    const apply = () => {
+      const dark = theme === 'dark' || (theme === 'system' && media.matches);
+      root.classList.toggle('dark', dark);
+      // Tell the browser which theme the app shows, so it never applies its own forced dark mode.
+      document.querySelector('meta[name="color-scheme"]')?.setAttribute('content', dark ? 'only dark' : 'only light');
+    };
     apply();
     media.addEventListener('change', apply);
     return () => media.removeEventListener('change', apply);
@@ -70,6 +78,8 @@ export default function App() {
           <Route path="/literasi" element={<LiteracyListPage />} />
           <Route path="/literasi/:id" element={<LiteracyTaskPage />} />
           <Route path="/stiker" element={<StickersPage />} />
+          <Route path="/jurnal" element={<JournalPage />} />
+          <Route path="/foto-soal" element={<PhotoSolvePage />} />
           <Route path="/penelitian" element={<ResearchPage />} />
           <Route path="/penelitian/angket" element={<SurveyPage />} />
           <Route path="/penelitian/:kind" element={<ResearchTestPage />} />
@@ -80,6 +90,7 @@ export default function App() {
         </Routes>
       </Suspense>
       <BottomNav />
+      <BeruAssistant />
       <BadgeToast />
     </HashRouter>
   );
